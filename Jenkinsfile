@@ -1,12 +1,20 @@
 pipeline {
     agent any
     
+    options {
+        timeout(time: 10, unit: 'MINUTES')
+        retry(2)
+    }
+    
     stages {
         stage('Checkout') {
             steps {
                 echo 'Descargando código...'
-                git branch: 'main', 
-                    url: 'https://github.com/PurosBrothers/simple-django-app-taller2.git'
+                retry(3) {
+                    git branch: 'main', 
+                        url: 'https://github.com/PurosBrothers/simple-django-app-taller2.git',
+                        timeout: 5
+                }
             }
         }
         
@@ -24,21 +32,11 @@ pipeline {
             steps {
                 echo 'Desplegando aplicación...'
                 sh '''
-                    # Copiar código al contenedor Django
                     docker cp . django-app:/app/
-                    
-                    # Instalar dependencias
                     docker exec django-app pip install -r requirements.txt
-                    
-                    # Ejecutar migraciones
                     docker exec django-app python manage.py migrate
-                    
-                    # Matar proceso anterior si existe
                     docker exec django-app pkill -f "python manage.py runserver" || true
-                    
-                    # Iniciar servidor Django en background
                     docker exec -d django-app sh -c "python manage.py runserver 0.0.0.0:8000 > /tmp/django.log 2>&1"
-                    
                     echo "Aplicación desplegada en http://localhost:8000"
                 '''
             }
