@@ -20,7 +20,7 @@ pipeline {
             steps {
                 echo 'Ejecutando pylint...'
                 sh '''
-                    apt-get update && apt-get install -y python3-pylint
+                    pip3 install --break-system-packages pylint
                     find . -name "*.py" -not -path "./venv/*" -not -path "./.venv/*" | xargs python3 -m pylint --exit-zero || true
                 '''
             }
