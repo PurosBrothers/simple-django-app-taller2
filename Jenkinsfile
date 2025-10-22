@@ -1,10 +1,10 @@
 pipeline {
     agent any
-    
+
     options {
         timeout(time: 10, unit: 'MINUTES')
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -15,7 +15,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Lint') {
             steps {
                 echo 'Ejecutando pylint...'
@@ -25,14 +25,14 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Deploy') {
             steps {
                 echo 'Desplegando aplicación...'
                 sh '''
                     docker stop django-app || true
                     docker rm django-app || true
-                    docker build -t django-app:latest app/
+                    docker build -t django-app:latest .
                     docker run -d --name django-app -p 8000:8000 django-app:latest
                     echo "Aplicación desplegada en http://localhost:8000"
                 '''
