@@ -32,8 +32,10 @@ pipeline {
                 sh '''
                     docker stop django-app || true
                     docker rm django-app || true
-                    docker build -t django-app:latest .
+                    docker build -t django-app:latest cool_counters/
                     docker run -d --name django-app -p 8000:8000 django-app:latest
+                    sleep 10
+                    docker exec django-app python manage.py migrate
                     echo "Aplicación desplegada en http://localhost:8000"
                 '''
             }
