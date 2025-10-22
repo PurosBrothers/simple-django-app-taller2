@@ -20,7 +20,7 @@ pipeline {
             steps {
                 echo 'Ejecutando pylint...'
                 sh '''
-                    python3 -m pip install pylint
+                    pip3 -m pip install pylint
                     find . -name "*.py" -not -path "./venv/*" -not -path "./.venv/*" | xargs python3 -m pylint --exit-zero || true
                 '''
             }
