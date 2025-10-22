@@ -10,7 +10,7 @@ pipeline {
             steps {
                 echo 'Descargando código...'
                 retry(3) {
-                    git branch: 'main', 
+                    git branch: 'main',
                         url: 'https://github.com/PurosBrothers/simple-django-app-taller2.git'
                 }
             }
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 echo 'Ejecutando pylint...'
                 sh '''
-                    pip3 install pylint
+                    apt-get update && apt-get install -y python3-pylint
                     find . -name "*.py" -not -path "./venv/*" -not -path "./.venv/*" | xargs python3 -m pylint --exit-zero || true
                 '''
             }
