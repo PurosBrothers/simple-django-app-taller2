@@ -30,11 +30,10 @@ pipeline {
             steps {
                 echo 'Desplegando aplicación...'
                 sh '''
-                    docker cp . django-app:/app/
-                    docker exec django-app pip install -r requirements.txt
-                    docker exec django-app python manage.py migrate
-                    docker exec django-app pkill -f "python manage.py runserver" || true
-                    docker exec -d django-app sh -c "python manage.py runserver 0.0.0.0:8000 > /tmp/django.log 2>&1"
+                    docker stop django-app || true
+                    docker rm django-app || true
+                    docker build -t django-app:latest app/
+                    docker run -d --name django-app -p 8000:8000 django-app:latest
                     echo "Aplicación desplegada en http://localhost:8000"
                 '''
             }
