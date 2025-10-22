@@ -3,7 +3,6 @@ pipeline {
     
     options {
         timeout(time: 10, unit: 'MINUTES')
-        retry(2)
     }
     
     stages {
@@ -12,8 +11,7 @@ pipeline {
                 echo 'Descargando código...'
                 retry(3) {
                     git branch: 'main', 
-                        url: 'https://github.com/PurosBrothers/simple-django-app-taller2.git',
-                        timeout: 5
+                        url: 'https://github.com/PurosBrothers/simple-django-app-taller2.git'
                 }
             }
         }
@@ -42,4 +40,5 @@ pipeline {
             }
         }
     }
+
 }
