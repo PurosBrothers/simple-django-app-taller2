@@ -20,8 +20,8 @@ pipeline {
             steps {
                 echo 'Ejecutando pylint...'
                 sh '''
-                    pip install pylint
-                    find . -name "*.py" -not -path "./venv/*" -not -path "./.venv/*" | xargs pylint --exit-zero || true
+                    /usr/bin/pip3 install pylint
+                    find . -name "*.py" -not -path "./venv/*" -not -path "./.venv/*" | xargs /usr/bin/python3 -m pylint --exit-zero || true
                 '''
             }
         }
@@ -40,5 +40,4 @@ pipeline {
             }
         }
     }
-
 }
