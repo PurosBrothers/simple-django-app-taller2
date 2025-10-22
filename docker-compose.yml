@@ -1,0 +1,31 @@
+services:
+  jenkins:
+    build: ./jenkins
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./Jenkinsfile:/var/jenkins_home/workspace/Jenkinsfile
+    networks:
+      - devopsnet
+    depends_on:
+      - app
+
+  app:
+    build: ./app
+    container_name: django-app
+    ports:
+      - "8000:8000"
+    networks:
+      - devopsnet
+    command: python manage.py runserver 0.0.0.0:8000
+
+volumes:
+  jenkins-data:
+
+networks:
+  devopsnet:
+    driver: bridge
